@@ -1,5 +1,5 @@
 # Sync and Integration tool for WordPress by BlueLena
-contact: waqas@bluelena.io
+contact: support@bluelena.io
 
 
 ## Documentation
