@@ -39,7 +39,7 @@ Finally, the bluelena_connect_bulk_action_admin_notice function displays a notic
 
 ### How to use
 #### Install the plugin by uploading the zipped plugin folder to wordpress.
-In the tools menu in wordpress, set up your webhook endpoint and secret token provided by BlueLena. After enabling the plugin, the data flow will be ready and you dont have to do anything.
+After installing the plugin, in the tools menu in wordpress, set up your webhook endpoint and secret token provided by BlueLena. After enabling the plugin, the data flow will be ready and you dont have to do anything.
 To sync previous WooCommerce Order data:
 - Go to 'Orders' in the WooCommerce Menu
 - Select all orders you want to sync
