@@ -38,4 +38,10 @@ The bluelena_connect_process_sync_queue function processes the sync queue. It re
 Finally, the bluelena_connect_bulk_action_admin_notice function displays a notice after syncing orders. It adds an action to the admin_notices hook and displays a message indicating the number of orders synced.
 
 ### How to use
-In the tools menu in wordpress, set up your webhook endpoint and secret token provided by BlueLena. After enabling the plugin. the data flow will be ready.
+In the tools menu in wordpress, set up your webhook endpoint and secret token provided by BlueLena. After enabling the plugin, the data flow will be ready and you dont have to do anything.
+To sync previous WooCommerce Order data:
+- Go to 'Orders' in the WooCommerce Menu
+- Select all orders you want to sync
+- In 'Bulk Actions' (in top right) open the dropdown menu and click on "Sync -> BlueLena"
+- Click 'Apply'
+- All orders will now start syncing one by one
