@@ -209,12 +209,6 @@ function bluelena_connect_bulk_action_admin_notice() {
 function bluelena_resync_menu_subitem() {
     $ids_received = "";
     if (isset($_POST['export_orders'])) {
-        // $webhook_url = sanitize_text_field($_POST['webhook_url']);
-        // $secret_token = sanitize_text_field($_POST['secret_token']);
-        // update_option('bluelena_connect_webhook_url', $webhook_url);
-        // update_option('bluelena_connect_secret_token', $secret_token);
-        // $enabled = isset($_POST['enabled']) ? 1 : 0; // Check if enabled checkbox is checked
-        // update_option('bluelena_connect_enabled', $enabled); // Save the enabled/disabled state
         $ids_received = explode(",", $_POST['order_ids']);
         $ids_received = array_map('trim', $ids_received);
         $ids_received = array_filter($ids_received);
