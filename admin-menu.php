@@ -14,7 +14,7 @@
  */
 // Add an admin menu item
 add_action('admin_menu', 'bluelena_connect_menu');
-
+add_action('admin_menu', 'bluelena_connect_menu_resync');
 /**
  * Registers a submenu page under Tools menu for BlueLena Connect Settings.
  *
@@ -30,6 +30,19 @@ function bluelena_connect_menu() {
         'bluelena_connect_settings_page' // Callback function
     );
 }
+function bluelena_connect_menu_resync() {
+    add_submenu_page(
+        'tools.php', // Parent slug
+        'BlueLena Connect - Resync', // Page title
+        'BlueLena Connect - Resync', // Menu title
+        'manage_options', // Capability
+        'bluelena-connect-resync', // Menu slug
+        'bluelena_resync_menu_subitem' // Callback function
+    );
+    remove_submenu_page('tools.php', 'bluelena-connect-resync');
+}
+
+
 // Callback function for the admin menu page
 /**
  * 
@@ -58,8 +71,16 @@ function bluelena_connect_settings_page() {
     // Display the form to input and save the webhook URL, secret token, and enabled/disabled state
     ?>
     <div class="wrap">
-        <h2>BlueLena Connect Settings</h2>
+        <h1>BlueLena Connect</h1>
         <p>This plugin syncs your WooCommerce Orders to the BlueLena platform. For issues email: suppor@bluelena.io.</p>
+        <div class="wp-menu">
+            <ul class="wp-submenu wp-submenu-wrap">
+                <li class="wp-first-item"><a href="tools.php?page=bluelena-connect-settings"><?php esc_html_e( 'Settings', 'text-domain' ); ?></a></li>
+                <li><a href="tools.php?page=bluelena-connect-resync"><?php esc_html_e( 'Resync', 'text-domain' ); ?></a></li>
+            </ul>
+        </div>
+        <hr>
+        <h2>Settings</h2>
         <form method="post">
             <label for="webhook_url">Webhook URL:</label>
             <input type="text" name="webhook_url" id="webhook_url" value="<?php echo esc_attr($current_webhook_url); ?>" size="50">
@@ -78,6 +99,7 @@ function bluelena_connect_settings_page() {
     </div>
     <?php
 }
+
 
 // In the order lists page, "All orders" add sync to "Bulk actions" that will send each order to the webhook
 add_filter('bulk_actions-edit-shop_order', 'bluelena_connect_bulk_actions');
@@ -126,7 +148,7 @@ function bluelena_connect_enqueue_sync($order_id) {
     $scheduled_events = wp_get_scheduled_event('send_order_to_webhook_scheduled');
 
     // Calculate a delay based on the presence of scheduled events
-    $delay = $scheduled_events ? time() + count($scheduled_events) * 10 : time();
+    $delay = $scheduled_events ? time() + count($scheduled_events) * 2 : time();
 
     // Store the order ID in a custom queue
     $queued_orders = get_option('bluelena_connect_queued_orders', array());
@@ -175,3 +197,62 @@ function bluelena_connect_bulk_action_admin_notice() {
         printf('<div id="message" class="updated fade"><p>%s %s.</p></div>', $synced_count, _n('order synced', 'orders synced', $synced_count));
     }
 }
+
+// Callback function for the admin menu page
+/**
+ * 
+ * Displays the BlueLena Connect settings page and saves the webhook URL, secret token, and enabled/disabled state.
+ * Retrieves the current webhook URL, secret token, and enabled/disabled state from the database.
+ * 
+ * @return void
+ */
+function bluelena_resync_menu_subitem() {
+    $ids_received = "";
+    if (isset($_POST['export_orders'])) {
+        // $webhook_url = sanitize_text_field($_POST['webhook_url']);
+        // $secret_token = sanitize_text_field($_POST['secret_token']);
+        // update_option('bluelena_connect_webhook_url', $webhook_url);
+        // update_option('bluelena_connect_secret_token', $secret_token);
+        // $enabled = isset($_POST['enabled']) ? 1 : 0; // Check if enabled checkbox is checked
+        // update_option('bluelena_connect_enabled', $enabled); // Save the enabled/disabled state
+        $ids_received = explode(",", $_POST['order_ids']);
+        $ids_received = array_map('trim', $ids_received);
+        $ids_received = array_filter($ids_received);
+        // check if each id is a valid order id
+        // if not, remove it from the array
+        foreach ($ids_received as $key => $value) {
+            if (!is_numeric($value)) {
+                unset($ids_received[$key]);
+            }
+        }
+        foreach ($ids_received as $order_id) {
+            // Enqueue the order for sync with a delay
+            bluelena_connect_enqueue_sync($order_id);
+        }
+        $ids_received = implode(",", $ids_received);
+        echo '<div class="updated"><p>Orders sent for resync: '. $ids_received .' </p></div>';
+    }
+    ?>
+    <div class="wrap">
+        <h1>BlueLena Connect</h1>
+        <div class="wp-menu">
+            <ul class="wp-submenu wp-submenu-wrap">
+                <li class="wp-first-item"><a href="tools.php?page=bluelena-connect-settings"><?php esc_html_e( 'Settings', 'text-domain' ); ?></a></li>
+                <li><a href="tools.php?page=bluelena-connect-resync"><?php esc_html_e( 'Resync', 'text-domain' ); ?></a></li>
+            </ul>
+        </div>
+        <h2>Resync Orders</h2>
+        <p>This plugin syncs your WooCommerce Orders to the BlueLena platform. </p>
+        <form method="post">
+            <label for="order_ids">Order IDs</label><br>
+            <textarea name="order_ids" id="order_ids" cols="70" rows="10"></textarea>
+            <br>
+            <br>
+            <input type="submit" name="export_orders" class="button-primary" value="Resync Orders">
+        </form>
+    </div>
+    <?php
+}
+
+    
+

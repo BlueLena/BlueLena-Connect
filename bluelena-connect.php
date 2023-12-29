@@ -3,7 +3,7 @@
  * Plugin Name: BlueLena Connect
  * Description: Sends WordPress post data to a webhook URL.
  * Version: 1.0
- * Author: Waqas
+ * Author: BlueLena
  */
 require_once(plugin_dir_path(__FILE__) . 'custom-meta-box.php');
 require_once(plugin_dir_path(__FILE__) . 'admin-menu.php');
@@ -36,7 +36,11 @@ function schedule_order_data_sending($order_id) {
         // If bluelena Connect is disabled, return early
         return;
     }
-    wp_schedule_single_event(time(), 'send_order_to_webhook_scheduled', array($order_id));
+    $order = wc_get_order($order_id);
+    if (!$order) {
+        return;
+    }
+    wp_schedule_single_event(time(), 'send_order_to_webhook_scheduled', array($order));
 }
 
 // Create a new action that will handle the sending of order data to the webhook
@@ -48,15 +52,10 @@ add_action('send_order_to_webhook_scheduled', 'send_order_to_webhook');
  * @param int $order_id The ID of the order to send.
  * @return void
  */
-function send_order_to_webhook($order_id) {
+function send_order_to_webhook($order) {
     $webhook_url = get_option('bluelena_connect_webhook_url', '');
     $secret_token = get_option('bluelena_connect_secret_token', '');
-    // Get the order object
-    $order = wc_get_order($order_id);
-    // Check if the order is valid
-    if (!$order) {
-        return;
-    }
+
     // Prepare the order data to send
     $order_data = $order->get_data();
 
@@ -116,8 +115,14 @@ function send_order_to_webhook($order_id) {
     // Check for errors
     if (is_wp_error($response)) {
         error_log('Webhook request failed: ' . $response->get_error_message());
+        update_post_meta($order_id, 'bluelena_connect_error', $response->get_error_message());
     } else {
         // Request was successful, handle the response here
-        $response_body = json_decode($response['body']);
+        $response_body = $response['body'];
+        // response status code
+        $response_code = $response['response']['code'];
+        // save response as custom field
+        update_post_meta($order_id, 'bluelena_connect_response_code', $response_code);
+        update_post_meta($order_id, 'bluelena_connect_response_body', $response_body);
     }
 }
