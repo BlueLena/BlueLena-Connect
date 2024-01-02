@@ -102,10 +102,11 @@ function bluelena_connect_settings_page() {
 
 
 // In the order lists page, "All orders" add sync to "Bulk actions" that will send each order to the webhook
-add_filter('bulk_actions-edit-shop_order', 'bluelena_connect_bulk_actions');
+add_filter('bulk_actions-edit-shop_order', 'bluelena_connect_bulk_actions', 20);
+
 
 function bluelena_connect_bulk_actions($actions) {
-    $actions['sync'] = 'Sync -> BlueLena';
+    $actions['bluelena_sync'] = 'Sync -> BlueLena';
     return $actions;
 }
 
@@ -121,7 +122,7 @@ add_filter('handle_bulk_actions-edit-shop_order', 'bluelena_connect_handle_bulk_
  * @return string The URL to redirect to after the bulk action is performed.
  */
 function bluelena_connect_handle_bulk_action($redirect_to, $action, $order_ids) {
-    if ($action !== 'sync') {
+    if ($action !== 'bluelena_sync') {
         return $redirect_to;
     }
 
