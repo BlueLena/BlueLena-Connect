@@ -11,7 +11,7 @@
  * Version: 1.0
  * Requires at least: 5.0
  */
- */
+
 require_once(plugin_dir_path(__FILE__) . 'custom-meta-box.php');
 require_once(plugin_dir_path(__FILE__) . 'admin-menu.php');
 
@@ -35,16 +35,12 @@ add_action('woocommerce_order_status_changed', 'schedule_order_data_sending', 1,
  * @param int $order_id The ID of the order to send.
  * @return void
  */
-function schedule_order_data_sending($order_id) {
+function schedule_order_data_sending($order_id, $order) {
     // Check if the bluelena Connect functionality is enabled
     $bluelena_connect_enabled = get_option('bluelena_connect_enabled', 1); // Default to enabled
 
     if (!$bluelena_connect_enabled) {
         // If bluelena Connect is disabled, return early
-        return;
-    }
-    $order = wc_get_order($order_id);
-    if (!$order) {
         return;
     }
     wp_schedule_single_event(time(), 'send_order_to_webhook_scheduled', array($order));
