@@ -108,8 +108,8 @@ function bluelena_connect_settings_page() {
  * @return void
  */
 function bluelena_connect_enqueue_sync($order_id) {
-    // Get all the currently scheduled events for 'send_order_to_webhook_scheduled'
-    $scheduled_events = wp_get_scheduled_event('send_order_to_webhook_scheduled');
+    // Get all the currently scheduled events for 'bluelena_send_order_to_webhook_scheduled'
+    $scheduled_events = wp_get_scheduled_event('bluelena_send_order_to_webhook_scheduled');
 
     // Calculate a delay based on the presence of scheduled events
     $delay = $scheduled_events ? time() + count($scheduled_events) * 2 : time();

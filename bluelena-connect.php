@@ -48,11 +48,11 @@ function schedule_order_data_sending($order_id) {
         // If the order is not found, return early
         return;
     }
-    wp_schedule_single_event(time(), 'send_order_to_webhook_scheduled', array($order));
+    wp_schedule_single_event(time(), 'bluelena_send_order_to_webhook_scheduled', array($order));
 }
 
 // Create a new action that will handle the sending of order data to the webhook
-add_action('send_order_to_webhook_scheduled', 'bluelena_send_order_to_webhook');
+add_action('bluelena_send_order_to_webhook_scheduled', 'bluelena_send_order_to_webhook');
 
 /**
  * Sends an order to a webhook URL with the order data and utm parameters.
