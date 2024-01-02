@@ -90,7 +90,7 @@ function bluelena_connect_settings_page() {
 
             <label for="enabled">Enable/Disable:</label>
             <input type="checkbox" name="enabled" id="enabled" <?php checked($current_enabled, 1); ?>>
-            <p class="description">Enable or disable the bluelena Connect functionality. Uncheck to disable the plugin.</p>
+            <p class="description">Enable or disable the BlueLena Connect auto-sync. Uncheck to disable the plugin.</p>
 
             <input type="submit" name="save_settings" class="button-primary" value="Save Settings">
         </form>
