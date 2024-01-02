@@ -24,8 +24,8 @@ require_once(plugin_dir_path(__FILE__) . 'admin-menu.php');
  */
 
 // Schedule the sending of order data to the webhook on WooCommerce order creation and update events
-add_action('woocommerce_new_order', 'schedule_order_data_sending', 1, 2);
-add_action('woocommerce_order_status_changed', 'schedule_order_data_sending', 1, 2);
+add_action('woocommerce_new_order', 'schedule_order_data_sending', 1, 1);
+add_action('woocommerce_order_status_changed', 'schedule_order_data_sending', 1, 1);
 
 /**
  * Schedules the sending of order data to Bluelena Connect.
@@ -35,7 +35,7 @@ add_action('woocommerce_order_status_changed', 'schedule_order_data_sending', 1,
  * @param int $order_id The ID of the order to send.
  * @return void
  */
-function schedule_order_data_sending($order_id, $order) {
+function schedule_order_data_sending($order_id) {
     // Check if the bluelena Connect functionality is enabled
     $bluelena_connect_enabled = get_option('bluelena_connect_enabled', 1); // Default to enabled
 
@@ -43,11 +43,16 @@ function schedule_order_data_sending($order_id, $order) {
         // If bluelena Connect is disabled, return early
         return;
     }
+    $order = wc_get_order($order_id);
+    if (!$order) {
+        // If the order is not found, return early
+        return;
+    }
     wp_schedule_single_event(time(), 'send_order_to_webhook_scheduled', array($order));
 }
 
 // Create a new action that will handle the sending of order data to the webhook
-add_action('send_order_to_webhook_scheduled', 'send_order_to_webhook');
+add_action('send_order_to_webhook_scheduled', 'bluelena_send_order_to_webhook');
 
 /**
  * Sends an order to a webhook URL with the order data and utm parameters.
@@ -55,7 +60,7 @@ add_action('send_order_to_webhook_scheduled', 'send_order_to_webhook');
  * @param int $order_id The ID of the order to send.
  * @return void
  */
-function send_order_to_webhook($order) {
+function bluelena_send_order_to_webhook($order) {
     $webhook_url = get_option('bluelena_connect_webhook_url', '');
     $secret_token = get_option('bluelena_connect_secret_token', '');
 
