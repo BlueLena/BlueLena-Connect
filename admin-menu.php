@@ -13,6 +13,7 @@
 // Add an admin menu item
 add_action('admin_menu', 'bluelena_connect_menu');
 add_action('admin_menu', 'bluelena_connect_menu_resync');
+
 /**
  * Registers a submenu page under Tools menu for BlueLena Connect Settings.
  *
@@ -28,6 +29,7 @@ function bluelena_connect_menu() {
         'bluelena_connect_settings_page' // Callback function
     );
 }
+
 function bluelena_connect_menu_resync() {
     add_submenu_page(
         'tools.php', // Parent slug
@@ -40,13 +42,11 @@ function bluelena_connect_menu_resync() {
     remove_submenu_page('tools.php', 'bluelena-connect-resync');
 }
 
-
 // Callback function for the admin menu page
 /**
- * 
  * Displays the BlueLena Connect settings page and saves the webhook URL, secret token, and enabled/disabled state.
  * Retrieves the current webhook URL, secret token, and enabled/disabled state from the database.
- * 
+ *
  * @return void
  */
 function bluelena_connect_settings_page() {
@@ -73,8 +73,8 @@ function bluelena_connect_settings_page() {
         <p>This plugin syncs your WooCommerce Orders to the BlueLena platform. For issues email: suppor@bluelena.io.</p>
         <div class="wp-menu">
             <ul class="wp-submenu wp-submenu-wrap">
-                <li class="wp-first-item"><a href="tools.php?page=bluelena-connect-settings"><?php esc_html_e( 'Settings', 'text-domain' ); ?></a></li>
-                <li><a href="tools.php?page=bluelena-connect-resync"><?php esc_html_e( 'Resync', 'text-domain' ); ?></a></li>
+                <li class="wp-first-item"><a href="tools.php?page=bluelena-connect-settings"><?php esc_html_e('Settings', 'text-domain'); ?></a></li>
+                <li><a href="tools.php?page=bluelena-connect-resync"><?php esc_html_e('Resync', 'text-domain'); ?></a></li>
             </ul>
         </div>
         <hr>
@@ -83,7 +83,7 @@ function bluelena_connect_settings_page() {
             <label for="webhook_url">Webhook URL:</label>
             <input type="text" name="webhook_url" id="webhook_url" value="<?php echo esc_attr($current_webhook_url); ?>" size="50">
             <p class="description">Enter the URL where post data will be sent.</p>
-            
+
             <label for="secret_token">Secret Token:</label>
             <input type="text" name="secret_token" id="secret_token" value="<?php echo esc_attr($current_secret_token); ?>" size="50">
             <p class="description">Enter the secret token for authorization.</p>
@@ -163,39 +163,31 @@ function bluelena_connect_bulk_action_admin_notice() {
 
 // Callback function for the admin menu page
 /**
- * 
  * Displays the BlueLena Connect settings page and saves the webhook URL, secret token, and enabled/disabled state.
  * Retrieves the current webhook URL, secret token, and enabled/disabled state from the database.
- * 
+ *
  * @return void
  */
 function bluelena_resync_menu_subitem() {
     $ids_received = "";
     if (isset($_POST['export_orders'])) {
-        $ids_received = explode(",", $_POST['order_ids']);
-        $ids_received = array_map('trim', $ids_received);
-        $ids_received = array_filter($ids_received);
-        // check if each id is a valid order id
-        // if not, remove it from the array
-        foreach ($ids_received as $key => $value) {
-            if (!is_numeric($value)) {
-                unset($ids_received[$key]);
-            }
-        }
+        $ids_received = sanitize_text_field($_POST['order_ids']);
+        $ids_received = array_map('intval', explode(",", $ids_received));
+        $ids_received = array_filter($ids_received, 'is_numeric');
         foreach ($ids_received as $order_id) {
             // Enqueue the order for sync with a delay
             bluelena_connect_enqueue_sync($order_id);
         }
         $ids_received = implode(",", $ids_received);
-        echo '<div class="updated"><p>Orders sent for resync: '. $ids_received .' </p></div>';
+        echo '<div class="updated"><p>Orders sent for resync: ' . esc_html($ids_received) . ' </p></div>';
     }
     ?>
     <div class="wrap">
         <h1>BlueLena Connect</h1>
         <div class="wp-menu">
             <ul class="wp-submenu wp-submenu-wrap">
-                <li class="wp-first-item"><a href="tools.php?page=bluelena-connect-settings"><?php esc_html_e( 'Settings', 'text-domain' ); ?></a></li>
-                <li><a href="tools.php?page=bluelena-connect-resync"><?php esc_html_e( 'Resync', 'text-domain' ); ?></a></li>
+                <li class="wp-first-item"><a href="tools.php?page=bluelena-connect-settings"><?php esc_html_e('Settings', 'text-domain'); ?></a></li>
+                <li><a href="tools.php?page=bluelena-connect-resync"><?php esc_html_e('Resync', 'text-domain'); ?></a></li>
             </ul>
         </div>
         <h2>Resync Orders</h2>
@@ -210,6 +202,3 @@ function bluelena_resync_menu_subitem() {
     </div>
     <?php
 }
-
-    
-
