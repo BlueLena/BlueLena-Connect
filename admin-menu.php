@@ -6,8 +6,6 @@
  * 
  * The `bluelena_connect_menu` function adds a submenu page to the "Tools" menu in the WordPress admin dashboard.
  * The `bluelena_connect_settings_page` function displays a form to input and save the webhook URL, secret token, and enabled/disabled state.
- * The `bluelena_connect_bulk_actions` function adds a "Sync -> BlueLena" option to the "Bulk actions" dropdown in the "All orders" page of WooCommerce.
- * The `bluelena_connect_handle_bulk_action` function handles the "Sync -> BlueLena" bulk action by enqueuing each selected order for sync.
  * The `bluelena_connect_enqueue_sync` function enqueues an order for sync with a delay.
  * The `bluelena_connect_process_sync_queue` function processes the sync queue by sending each order to the webhook.
  * The `bluelena_connect_bulk_action_admin_notice` function displays a notice after syncing orders.
