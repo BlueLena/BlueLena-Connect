@@ -66,6 +66,7 @@ function bluelena_send_order_to_webhook($order) {
 
     // Prepare the order data to send
     $order_data = $order->get_data();
+    $order_id = $order_data['id'];
 
     # get utm_campaign=701Du0000008wo0IAA from current url
     $url = $_SERVER['REQUEST_URI'];
