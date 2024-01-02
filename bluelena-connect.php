@@ -43,6 +43,10 @@ function schedule_order_data_sending($order_id) {
         // If bluelena Connect is disabled, return early
         return;
     }
+    // adding a random string to bypass this issue:
+    // Note that scheduling an event to occur within 10 minutes of an 
+    // existing event with the same action hook will be ignored unless
+    //  you pass unique $args values for each scheduled event.
     $random_string = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 10);
     
     wp_schedule_single_event(time(), 'bluelena_send_order_to_webhook_scheduled', array($order_id, $random_string));
