@@ -43,16 +43,13 @@ function schedule_order_data_sending($order_id) {
         // If bluelena Connect is disabled, return early
         return;
     }
-    $order = wc_get_order($order_id);
-    if (!$order) {
-        // If the order is not found, return early
-        return;
-    }
-    wp_schedule_single_event(time(), 'bluelena_send_order_to_webhook_scheduled', array($order));
+    $random_string = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 10);
+    
+    wp_schedule_single_event(time(), 'bluelena_send_order_to_webhook_scheduled', array($order_id, $random_string));
 }
 
 // Create a new action that will handle the sending of order data to the webhook
-add_action('bluelena_send_order_to_webhook_scheduled', 'bluelena_send_order_to_webhook');
+add_action('bluelena_send_order_to_webhook_scheduled', 'bluelena_send_order_to_webhook', 1, 2);
 
 /**
  * Sends an order to a webhook URL with the order data and utm parameters.
@@ -60,13 +57,18 @@ add_action('bluelena_send_order_to_webhook_scheduled', 'bluelena_send_order_to_w
  * @param object $order The order object to send.
  * @return void
  */
-function bluelena_send_order_to_webhook($order) {
+function bluelena_send_order_to_webhook($order_id, $random_string) {
     $webhook_url = get_option('bluelena_connect_webhook_url', '');
     $secret_token = get_option('bluelena_connect_secret_token', '');
 
+    $order = wc_get_order($order_id);
+    if (!$order) {
+        // If the order is not found, return early
+        return;
+    }
+    
     // Prepare the order data to send
     $order_data = $order->get_data();
-    $order_id = $order_data['id'];
 
     # get utm_campaign=701Du0000008wo0IAA from current url
     $url = $_SERVER['REQUEST_URI'];
