@@ -24,8 +24,8 @@ require_once(plugin_dir_path(__FILE__) . 'admin-menu.php');
  */
 
 // Schedule the sending of order data to the webhook on WooCommerce order creation and update events
-add_action('woocommerce_new_order', 'schedule_order_data_sending', 1, 1);
-add_action('woocommerce_order_status_changed', 'schedule_order_data_sending', 1, 1);
+add_action('woocommerce_new_order', 'schedule_order_data_sending', 1, 2);
+add_action('woocommerce_order_status_changed', 'schedule_order_data_sending', 1, 2);
 
 /**
  * Schedules the sending of order data to Bluelena Connect.
