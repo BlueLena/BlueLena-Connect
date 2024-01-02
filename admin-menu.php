@@ -177,7 +177,8 @@ function bluelena_connect_process_sync_queue() {
     // Loop through and process each order
     foreach ($queued_orders as $order_id) {
         // Process the order for synchronization
-        bluelena_send_order_to_webhook($order_id);
+        $order = wc_get_order($order_id);
+        bluelena_send_order_to_webhook($order);
     }
 
     // Clear the queue
