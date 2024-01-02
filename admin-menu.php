@@ -100,43 +100,6 @@ function bluelena_connect_settings_page() {
     <?php
 }
 
-
-// In the order lists page, "All orders" add sync to "Bulk actions" that will send each order to the webhook
-add_filter('bulk_actions-edit-shop_order', 'bluelena_connect_bulk_actions', 20);
-
-
-function bluelena_connect_bulk_actions($actions) {
-    $actions['bluelena_sync'] = 'Sync -> BlueLena';
-    return $actions;
-}
-
-// Handle the sync bulk action
-add_filter('handle_bulk_actions-edit-shop_order', 'bluelena_connect_handle_bulk_action', 10, 3);
-
-/**
- * Handles bulk actions for syncing orders.
- *
- * @param string $redirect_to The URL to redirect to after the bulk action is performed.
- * @param string $action The bulk action being performed.
- * @param array $order_ids The IDs of the orders being synced.
- * @return string The URL to redirect to after the bulk action is performed.
- */
-function bluelena_connect_handle_bulk_action($redirect_to, $action, $order_ids) {
-    if ($action !== 'bluelena_sync') {
-        return $redirect_to;
-    }
-
-    // Loop through each order ID and enqueue them for sync
-    foreach ($order_ids as $order_id) {
-        // Enqueue the order for sync with a delay
-        bluelena_connect_enqueue_sync($order_id);
-    }
-
-    // Redirect back to the orders page
-    $redirect_to = add_query_arg('bulk_synced', count($order_ids), $redirect_to);
-    return $redirect_to;
-}
-
 // Function to enqueue an order for sync with a delay
 /**
  * Enqueues an order for syncing with a webhook.
