@@ -87,10 +87,16 @@ function bluelena_send_order_to_webhook($order) {
     } else {
         $utm_medium = '';
     }
+    if (isset($params['utm_term'])) {
+        $utm_term = $params['utm_term'];
+    } else {
+        $utm_term = '';
+    }
     $order_data['utm'] = array(
         'utm_campaign' => $utm_campaign,
         'utm_source' => $utm_source,
         'utm_medium' => $utm_medium,
+        'utm_term' => $utm_term,
     );
 
     $products = $order->get_items();
