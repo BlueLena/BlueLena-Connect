@@ -22,8 +22,8 @@ add_action('admin_menu', 'bluelena_connect_menu_resync');
 function bluelena_connect_menu() {
     add_submenu_page(
         'tools.php', // Parent slug
-        'BlueLena Connect Settings', // Page title
-        'BlueLena Connect', // Menu title
+        'BlueLena Connect - Settings', // Page title
+        'BlueLena Connect - Settings', // Menu title
         'manage_options', // Capability
         'bluelena-connect-settings', // Menu slug
         'bluelena_connect_settings_page' // Callback function
@@ -39,7 +39,7 @@ function bluelena_connect_menu_resync() {
         'bluelena-connect-resync', // Menu slug
         'bluelena_resync_menu_subitem' // Callback function
     );
-    remove_submenu_page('tools.php', 'bluelena-connect-resync');
+    //remove_submenu_page('tools.php', 'bluelena-connect-resync');
 }
 
 // Callback function for the admin menu page

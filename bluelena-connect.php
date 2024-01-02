@@ -54,7 +54,8 @@ add_action('bluelena_send_order_to_webhook_scheduled', 'bluelena_send_order_to_w
 /**
  * Sends an order to a webhook URL with the order data and utm parameters.
  *
- * @param object $order The order object to send.
+ * @param int $order_id The order object to send.
+ * @param string $random_string The random string to send.
  * @return void
  */
 function bluelena_send_order_to_webhook($order_id, $random_string) {
