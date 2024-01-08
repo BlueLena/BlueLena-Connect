@@ -190,7 +190,7 @@ function bluelena_resync_menu_subitem() {
             </ul>
         </div>
         <h2>Resync Orders</h2>
-        <p>This plugin syncs your WooCommerce Orders to the BlueLena platform. </p>
+        <p>This plugin syncs your WooCommerce Orders to the BlueLena platform. Put order IDs in a csv format to sync those orders. E.g: 123, 124, 125 ...</p>
         <form method="post">
             <label for="order_ids">Order IDs</label><br>
             <textarea name="order_ids" id="order_ids" cols="70" rows="10"></textarea>
