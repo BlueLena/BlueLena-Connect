@@ -1,6 +1,6 @@
 === Plugin Name ===Creator: BlueLena
 
-Donate link: https://bluelena.io
+Link: https://bluelena.io
 
 Tags: business, directory
 
