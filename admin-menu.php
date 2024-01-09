@@ -70,7 +70,7 @@ function bluelena_connect_settings_page() {
     ?>
     <div class="wrap">
         <h1>BlueLena Connect</h1>
-        <p>This plugin syncs your WooCommerce Orders to the BlueLena platform. For issues email: suppor@bluelena.io.</p>
+        <p>This plugin syncs your WooCommerce Orders to the BlueLena platform. For issues email: support@bluelena.io.</p>
         <div class="wp-menu">
             <ul class="wp-submenu wp-submenu-wrap">
                 <li class="wp-first-item"><a href="tools.php?page=bluelena-connect-settings"><?php esc_html_e('Settings', 'text-domain'); ?></a></li>
