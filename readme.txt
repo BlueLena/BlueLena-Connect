@@ -1,4 +1,6 @@
-=== Plugin Name ===Creator: BlueLena
+=== Plugin Name ===
+
+Creator: BlueLena
 
 Link: https://bluelena.io
 
