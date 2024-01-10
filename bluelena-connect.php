@@ -2,13 +2,10 @@
 /**
  * Plugin Name: BlueLena Connect
  * Description: Sends WordPress post data to a webhook URL.
- * Version: 1.0
+ * Version: 1.1
  * Author: BlueLena
  * Author URI: https://bluelena.io
- * License: GPL2
- * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: bluelena-connect
- * Version: 1.0
  * Requires at least: 5.0
  */
 
