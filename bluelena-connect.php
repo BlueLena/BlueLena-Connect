@@ -136,6 +136,7 @@ function bluelena_send_order_to_webhook($order_id, $random_string) {
     if (is_wp_error($response)) {
         error_log('Webhook request failed: ' . $response->get_error_message());
         $order->update_meta_data('bluelena_connect_error', $response->get_error_message());
+        $order->save();
     } else {
         // Request was successful, handle the response here
         $response_body = $response['body'];
@@ -144,5 +145,6 @@ function bluelena_send_order_to_webhook($order_id, $random_string) {
         // save response as custom field
         $order->update_meta_data('bluelena_connect_response_code', $response_code);
         $order->update_meta_data('bluelena_connect_response_body', $response_body);
+        $order->save();
     }
 }
